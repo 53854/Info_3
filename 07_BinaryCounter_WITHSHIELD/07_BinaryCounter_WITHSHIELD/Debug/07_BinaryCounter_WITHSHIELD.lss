@@ -1,0 +1,229 @@
+
+07_BinaryCounter_WITHSHIELD.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         00000000  00800100  00800100  000001a8  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         00000134  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .bss          0000000a  00800100  00800100  000001a8  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  000001a8  2**0
+                  CONTENTS, READONLY
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000001d8  2**2
+                  CONTENTS, READONLY
+  5 .debug_aranges 00000030  00000000  00000000  00000214  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   0000071f  00000000  00000000  00000244  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 00000667  00000000  00000000  00000963  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   00000267  00000000  00000000  00000fca  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  00000044  00000000  00000000  00001234  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    00000392  00000000  00000000  00001278  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_loc    0000006c  00000000  00000000  0000160a  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 00000020  00000000  00000000  00001676  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 34 00 	jmp	0x68	; 0x68 <__ctors_end>
+   4:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+   8:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+   c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  10:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  14:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  18:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  1c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  20:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  24:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  28:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  2c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  30:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  34:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  38:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  3c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  40:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  44:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  48:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  4c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  50:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  54:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  58:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  5c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  60:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  64:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+
+00000068 <__ctors_end>:
+  68:	11 24       	eor	r1, r1
+  6a:	1f be       	out	0x3f, r1	; 63
+  6c:	cf ef       	ldi	r28, 0xFF	; 255
+  6e:	d8 e0       	ldi	r29, 0x08	; 8
+  70:	de bf       	out	0x3e, r29	; 62
+  72:	cd bf       	out	0x3d, r28	; 61
+
+00000074 <__do_clear_bss>:
+  74:	21 e0       	ldi	r18, 0x01	; 1
+  76:	a0 e0       	ldi	r26, 0x00	; 0
+  78:	b1 e0       	ldi	r27, 0x01	; 1
+  7a:	01 c0       	rjmp	.+2      	; 0x7e <.do_clear_bss_start>
+
+0000007c <.do_clear_bss_loop>:
+  7c:	1d 92       	st	X+, r1
+
+0000007e <.do_clear_bss_start>:
+  7e:	aa 30       	cpi	r26, 0x0A	; 10
+  80:	b2 07       	cpc	r27, r18
+  82:	e1 f7       	brne	.-8      	; 0x7c <.do_clear_bss_loop>
+  84:	0e 94 7f 00 	call	0xfe	; 0xfe <main>
+  88:	0c 94 98 00 	jmp	0x130	; 0x130 <_exit>
+
+0000008c <__bad_interrupt>:
+  8c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000090 <init>:
+unsigned counter = 0;
+unsigned binArr[4];
+
+void init(void){
+	// LED
+	DDRB |= 0b00011110;		// Configure PB5 as Output
+  90:	84 b1       	in	r24, 0x04	; 4
+  92:	8e 61       	ori	r24, 0x1E	; 30
+  94:	84 b9       	out	0x04, r24	; 4
+	
+	// Buttons
+	DDRB &= ~(1<<1);	//Configure PB1 as Input
+  96:	84 b1       	in	r24, 0x04	; 4
+  98:	8d 7f       	andi	r24, 0xFD	; 253
+  9a:	84 b9       	out	0x04, r24	; 4
+	PORTB |= 1<<1;		//Enable Internal Pull-Up at PB1
+  9c:	85 b1       	in	r24, 0x05	; 5
+  9e:	82 60       	ori	r24, 0x02	; 2
+  a0:	85 b9       	out	0x05, r24	; 5
+	
+	DDRD &= ~(1<<1);	//Configure PD1 as Input
+  a2:	8a b1       	in	r24, 0x0a	; 10
+  a4:	8d 7f       	andi	r24, 0xFD	; 253
+  a6:	8a b9       	out	0x0a, r24	; 10
+	PORTD |= 1<<1;		//Enable Internal Pull-Up at PD1
+  a8:	8b b1       	in	r24, 0x0b	; 11
+  aa:	82 60       	ori	r24, 0x02	; 2
+  ac:	8b b9       	out	0x0b, r24	; 11
+  ae:	08 95       	ret
+
+000000b0 <displayBinaryCount>:
+}
+
+void displayBinaryCount(){
+
+	int i = 1;
+	int n = counter;
+  b0:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
+  b4:	90 91 01 01 	lds	r25, 0x0101	; 0x800101 <__DATA_REGION_ORIGIN__+0x1>
+	PORTD |= 1<<1;		//Enable Internal Pull-Up at PD1
+}
+
+void displayBinaryCount(){
+
+	int i = 1;
+  b8:	41 e0       	ldi	r20, 0x01	; 1
+  ba:	50 e0       	ldi	r21, 0x00	; 0
+	int n = counter;
+	while (n > 0) {
+  bc:	1c c0       	rjmp	.+56     	; 0xf6 <displayBinaryCount+0x46>
+		
+		/*if(n%2!=0){
+			PORTC |= (1<<i);
+		}
+		else{PORTC &= ~(1<<i);}*/
+		binArr[i] = n%2;
+  be:	9c 01       	movw	r18, r24
+  c0:	21 70       	andi	r18, 0x01	; 1
+  c2:	30 78       	andi	r19, 0x80	; 128
+  c4:	33 23       	and	r19, r19
+  c6:	34 f4       	brge	.+12     	; 0xd4 <displayBinaryCount+0x24>
+  c8:	21 50       	subi	r18, 0x01	; 1
+  ca:	31 09       	sbc	r19, r1
+  cc:	2e 6f       	ori	r18, 0xFE	; 254
+  ce:	3f 6f       	ori	r19, 0xFF	; 255
+  d0:	2f 5f       	subi	r18, 0xFF	; 255
+  d2:	3f 4f       	sbci	r19, 0xFF	; 255
+  d4:	fa 01       	movw	r30, r20
+  d6:	ee 0f       	add	r30, r30
+  d8:	ff 1f       	adc	r31, r31
+  da:	ee 5f       	subi	r30, 0xFE	; 254
+  dc:	fe 4f       	sbci	r31, 0xFE	; 254
+  de:	31 83       	std	Z+1, r19	; 0x01
+  e0:	20 83       	st	Z, r18
+		n = n / 2;
+  e2:	9c 01       	movw	r18, r24
+  e4:	99 23       	and	r25, r25
+  e6:	14 f4       	brge	.+4      	; 0xec <displayBinaryCount+0x3c>
+  e8:	2f 5f       	subi	r18, 0xFF	; 255
+  ea:	3f 4f       	sbci	r19, 0xFF	; 255
+  ec:	c9 01       	movw	r24, r18
+  ee:	95 95       	asr	r25
+  f0:	87 95       	ror	r24
+		i++;
+  f2:	4f 5f       	subi	r20, 0xFF	; 255
+  f4:	5f 4f       	sbci	r21, 0xFF	; 255
+
+void displayBinaryCount(){
+
+	int i = 1;
+	int n = counter;
+	while (n > 0) {
+  f6:	18 16       	cp	r1, r24
+  f8:	19 06       	cpc	r1, r25
+  fa:	0c f3       	brlt	.-62     	; 0xbe <displayBinaryCount+0xe>
+		binArr[i] = n%2;
+		n = n / 2;
+		i++;
+	}
+
+}
+  fc:	08 95       	ret
+
+000000fe <main>:
+
+
+int main(void){
+	init();
+  fe:	0e 94 48 00 	call	0x90	; 0x90 <init>
+	
+	while (1){
+ 		if(BUTTON_ONE_PRESS){
+ 102:	49 9b       	sbis	0x09, 1	; 9
+ 104:	0e c0       	rjmp	.+28     	; 0x122 <main+0x24>
+			counter ++;
+ 106:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 10a:	90 91 01 01 	lds	r25, 0x0101	; 0x800101 <__DATA_REGION_ORIGIN__+0x1>
+ 10e:	01 96       	adiw	r24, 0x01	; 1
+			counter %= 16;
+ 110:	8f 70       	andi	r24, 0x0F	; 15
+ 112:	99 27       	eor	r25, r25
+ 114:	90 93 01 01 	sts	0x0101, r25	; 0x800101 <__DATA_REGION_ORIGIN__+0x1>
+ 118:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
+			displayBinaryCount(counter);
+ 11c:	0e 94 58 00 	call	0xb0	; 0xb0 <displayBinaryCount>
+ 120:	f0 cf       	rjmp	.-32     	; 0x102 <main+0x4>
+			} else if (BUTTON_TWO_PRESS){
+ 122:	19 9b       	sbis	0x03, 1	; 3
+ 124:	ee cf       	rjmp	.-36     	; 0x102 <main+0x4>
+			counter = 0;
+ 126:	10 92 01 01 	sts	0x0101, r1	; 0x800101 <__DATA_REGION_ORIGIN__+0x1>
+ 12a:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 12e:	e9 cf       	rjmp	.-46     	; 0x102 <main+0x4>
+
+00000130 <_exit>:
+ 130:	f8 94       	cli
+
+00000132 <__stop_program>:
+ 132:	ff cf       	rjmp	.-2      	; 0x132 <__stop_program>

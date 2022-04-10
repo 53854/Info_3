@@ -4,7 +4,6 @@
 
 #define LED_ON PORTC |= (1<<1)
 #define LED_OFF PORTC &= ~(1<<1)
-
 #define LED1GN_TOGGLE PINC |= (1<<1)
 #define LED2GN_TOGGLE PINC |= (1<<2)
 #define LED3GN_TOGGLE PINC |= (1<<3)
@@ -29,11 +28,10 @@ void init(void){
 
 void blink(){
 	for(unsigned i = 0; i <= blinkTimes; i++){
-		//blink the led
-        LED_ON;
-        _delay_ms(5000);
-        LED_OFF;
-        _delay_ms(5000);
+		LED_ON;
+		_delay_ms(5000);
+		LED_OFF;
+		_delay_ms(5000);
 	}
 }
 

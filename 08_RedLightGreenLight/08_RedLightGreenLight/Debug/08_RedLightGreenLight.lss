@@ -1,0 +1,157 @@
+
+08_RedLightGreenLight.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         00000000  00800100  00800100  0000013a  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         000000e6  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .comment      00000030  00000000  00000000  0000013a  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  0000016c  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000030  00000000  00000000  000001ac  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   000006bb  00000000  00000000  000001dc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 0000061b  00000000  00000000  00000897  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   00000253  00000000  00000000  00000eb2  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000044  00000000  00000000  00001108  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    00000369  00000000  00000000  0000114c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_ranges 00000020  00000000  00000000  000014b5  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 34 00 	jmp	0x68	; 0x68 <__ctors_end>
+   4:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+   8:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+   c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  10:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  14:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  18:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  1c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  20:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  24:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  28:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  2c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  30:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  34:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  38:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  3c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  40:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  44:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  48:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  4c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  50:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  54:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  58:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  5c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  60:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  64:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+
+00000068 <__ctors_end>:
+  68:	11 24       	eor	r1, r1
+  6a:	1f be       	out	0x3f, r1	; 63
+  6c:	cf ef       	ldi	r28, 0xFF	; 255
+  6e:	d8 e0       	ldi	r29, 0x08	; 8
+  70:	de bf       	out	0x3e, r29	; 62
+  72:	cd bf       	out	0x3d, r28	; 61
+  74:	0e 94 6c 00 	call	0xd8	; 0xd8 <main>
+  78:	0c 94 71 00 	jmp	0xe2	; 0xe2 <_exit>
+
+0000007c <__bad_interrupt>:
+  7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000080 <init>:
+#define BUTTON_ONE_PRESS (!(PIND & (1<<1)))
+#define BUTTON_TWO_PRESS (!(PINB & (1<<1)))
+
+void init(void){
+	// LEDS
+	DDRC |= 0b00111110;
+  80:	87 b1       	in	r24, 0x07	; 7
+  82:	8e 63       	ori	r24, 0x3E	; 62
+  84:	87 b9       	out	0x07, r24	; 7
+	DDRD |= 0b11110001;
+  86:	8a b1       	in	r24, 0x0a	; 10
+  88:	81 6f       	ori	r24, 0xF1	; 241
+  8a:	8a b9       	out	0x0a, r24	; 10
+
+	// Buttons
+	DDRB &= ~(1<<1);	//Configure PB1 as Input
+  8c:	84 b1       	in	r24, 0x04	; 4
+  8e:	8d 7f       	andi	r24, 0xFD	; 253
+  90:	84 b9       	out	0x04, r24	; 4
+	PORTB |= 1<<1;		//Enable Internal Pull-Up at PB1
+  92:	85 b1       	in	r24, 0x05	; 5
+  94:	82 60       	ori	r24, 0x02	; 2
+  96:	85 b9       	out	0x05, r24	; 5
+	
+	DDRD &= ~(1<<1);	//Configure PD1 as Input
+  98:	8a b1       	in	r24, 0x0a	; 10
+  9a:	8d 7f       	andi	r24, 0xFD	; 253
+  9c:	8a b9       	out	0x0a, r24	; 10
+	PORTD |= 1<<1;		//Enable Internal Pull-Up at PD1
+  9e:	8b b1       	in	r24, 0x0b	; 11
+  a0:	82 60       	ori	r24, 0x02	; 2
+  a2:	8b b9       	out	0x0b, r24	; 11
+  a4:	08 95       	ret
+
+000000a6 <check_buttons>:
+}
+
+void check_buttons(void){
+	if(BUTTON_ONE_PRESS)	{GREEN_ON;}
+  a6:	49 99       	sbic	0x09, 1	; 9
+  a8:	07 c0       	rjmp	.+14     	; 0xb8 <check_buttons+0x12>
+  aa:	88 b1       	in	r24, 0x08	; 8
+  ac:	8e 63       	ori	r24, 0x3E	; 62
+  ae:	88 b9       	out	0x08, r24	; 8
+  b0:	8b b1       	in	r24, 0x0b	; 11
+  b2:	80 63       	ori	r24, 0x30	; 48
+  b4:	8b b9       	out	0x0b, r24	; 11
+  b6:	06 c0       	rjmp	.+12     	; 0xc4 <check_buttons+0x1e>
+	else					{GREEN_OFF;}
+  b8:	88 b1       	in	r24, 0x08	; 8
+  ba:	81 7c       	andi	r24, 0xC1	; 193
+  bc:	88 b9       	out	0x08, r24	; 8
+  be:	8b b1       	in	r24, 0x0b	; 11
+  c0:	8f 7c       	andi	r24, 0xCF	; 207
+  c2:	8b b9       	out	0x0b, r24	; 11
+	
+	if(BUTTON_TWO_PRESS)	{RED_ON;}
+  c4:	19 99       	sbic	0x03, 1	; 3
+  c6:	04 c0       	rjmp	.+8      	; 0xd0 <check_buttons+0x2a>
+  c8:	8b b1       	in	r24, 0x0b	; 11
+  ca:	81 6c       	ori	r24, 0xC1	; 193
+  cc:	8b b9       	out	0x0b, r24	; 11
+  ce:	08 95       	ret
+	else					{RED_OFF;}
+  d0:	8b b1       	in	r24, 0x0b	; 11
+  d2:	8e 73       	andi	r24, 0x3E	; 62
+  d4:	8b b9       	out	0x0b, r24	; 11
+  d6:	08 95       	ret
+
+000000d8 <main>:
+}
+
+int main(void){
+	init();
+  d8:	0e 94 40 00 	call	0x80	; 0x80 <init>
+	while (1){
+		check_buttons();
+  dc:	0e 94 53 00 	call	0xa6	; 0xa6 <check_buttons>
+  e0:	fd cf       	rjmp	.-6      	; 0xdc <main+0x4>
+
+000000e2 <_exit>:
+  e2:	f8 94       	cli
+
+000000e4 <__stop_program>:
+  e4:	ff cf       	rjmp	.-2      	; 0xe4 <__stop_program>
