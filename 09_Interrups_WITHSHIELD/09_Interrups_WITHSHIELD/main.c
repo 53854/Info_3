@@ -3,9 +3,8 @@
 
 #define GREEN_ON {PORTC |= 0b00111110; PORTD |= 0b00110000;}
 #define GREEN_OFF {PORTC &= ~0b00111110; PORTD &= ~0b00110000;}
-//#define GREEN_TOGGLE {PINC |= 0b00111110; PIND |= 0b00110000;}
-//#define GREEN_TOGGLE {PINC |= (1<<1); PINC |= (1<<2); PINC |= (1<<3);PINC |= (1<<4);PINC |= (1<<5);}
-#define GREEN_TOGGLE PINC |= (1<<1);
+#define GREEN_TOGGLE {PINC |= 0b00111110; PIND |= 0b00110000;}
+
 
 #define RED_ON PORTD	|= 0b11000001
 #define RED_OFF PORTD	&= ~0b11000001
@@ -16,9 +15,7 @@
 
 ISR(PCINT2_vect) // Triggers on PD changes
 {
-	PINC |= 0b00111110;
-	PIND |= (1<<PIND5);
-	PIND |= (1<<PIND6);
+	GREEN_TOGGLE;
 }
 
 
