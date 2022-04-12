@@ -18,14 +18,25 @@ ISR(PCINT2_vect) // Triggers on PD changes
 	GREEN_TOGGLE;
 }
 
+ISR(PCINT0_vect) // Triggers on PD changes
+{
+	RED_TOGGLE;
+}
+
 
 void init(void){
 	
 	
 	// Pin change interrupt btn1
 	sei();					// enable global interrupt
-	PCICR |= (1<<PCIE2);	// enable PD PC interrupt (PCINT23..16)
-	PCMSK2 |= (1<<PCINT17);	// enable PD1 interrupt
+	
+	PCICR |= (1<<PCIE2);	// enable PB
+	
+	PCICR |= (1<<PCIE2);	// enable PD PC interrupt
+	PCICR |= (1<<PCIE0);	// enable PB PC interrup
+	
+	PCMSK0 |= (1<<1);	// mask out PB1 interrupt
+	PCMSK2 |= (1<<1);	// mask out PD1 interrupt
 	
 	// Buttons
 	DDRD &= ~(1<<1);	//Button 1 PD1
@@ -43,8 +54,8 @@ void init(void){
 }
 
 void check_buttons(void){
-	/*if(BUTTON_ONE_PRESS)	{GREEN_ON;}
-	else					{GREEN_OFF;}*/
+	if(BUTTON_ONE_PRESS)	{GREEN_ON;}
+	else					{GREEN_OFF;}
 	
 	if(BUTTON_TWO_PRESS)	{RED_ON;}
 	else					{RED_OFF;}
@@ -53,6 +64,6 @@ void check_buttons(void){
 int main(void){
 	init();
 	while (1){
-		check_buttons();
+		//check_buttons();
 	}
 }
