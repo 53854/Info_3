@@ -190,7 +190,7 @@ void init(void){
  114:	80 81       	ld	r24, Z
  116:	84 60       	ori	r24, 0x04	; 4
  118:	80 83       	st	Z, r24
-	PCICR |= (1<<PCIE0);	// enable PB PC interrup
+	PCICR |= (1<<PCIE0);	// enable PB PC interrupt
  11a:	80 81       	ld	r24, Z
  11c:	81 60       	ori	r24, 0x01	; 1
  11e:	80 83       	st	Z, r24

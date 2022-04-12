@@ -5,7 +5,6 @@
 #define GREEN_OFF {PORTC &= ~0b00111110; PORTD &= ~0b00110000;}
 #define GREEN_TOGGLE {PORTC ^= 0b00111110; PORTD ^= 0b00110000;}
 
-
 #define RED_ON {PORTD |= 0b11000000; PORTB |= (1<<0);}
 #define RED_OFF {PORTD &= ~0b11000000; PORTB &= ~(1<<0);}
 #define RED_TOGGLE {PORTD ^= 0b11000000; PORTB ^= (1<<0);}
@@ -29,7 +28,7 @@ void init(void){
 	// DDR
 	DDRB |= 0b00000001;
 	DDRC |= 0b00111110;
-	DDRD |= 0b11110001;
+	DDRD |= 0b1111000	1;
 	
 	// Buttons
 	//DDRD &= ~(1<<1);	//Button 1 PD1

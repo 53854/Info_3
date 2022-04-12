@@ -1,6 +1,8 @@
+#define F_CPU 16E6			// or F_CPU 16000000
+
 #include <avr/io.h>
 #include <util/delay.h>
-#define F_CPU 16E6			// or F_CPU 16000000
+
 
 #define LED_ON PORTC |= (1<<1)
 #define LED_OFF PORTC &= ~(1<<1)
@@ -27,11 +29,11 @@ void init(void){
 }
 
 void blink(){
-	for(unsigned i = 0; i <= blinkTimes; i++){
+	for(unsigned i = 0; i < blinkTimes; i++){
 		LED_ON;
-		_delay_ms(5000);
+		_delay_ms(500);
 		LED_OFF;
-		_delay_ms(5000);
+		_delay_ms(500);
 	}
 }
 
