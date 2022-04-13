@@ -1,21 +1,25 @@
+#define F_CPU 16E6			// or F_CPU 16000000
 #include <avr/io.h>
 #include <util/delay.h>
 #include <stdio.h>
 #include <string.h>
 
 
-#define F_CPU 16E6			// or F_CPU 16000000
+
 #define stdout	
 
-#define BUTTON_ONE_PRESS ((PIND & (1<<1)))
-#define BUTTON_TWO_PRESS ((PINB & (1<<1)))
+#define BUTTON_ONE_PRESS (!(PIND & (1<<1)))
+#define BUTTON_TWO_PRESS (!(PINB & (1<<1)))
 
-unsigned counter = 0;
+unsigned counter;
 //unsigned binArr[4];
 
 void init(void){
+	// counter
+	counter = 0;
+	
 	// LED
-	DDRB |= 0b00011110;		// Configure PB5 as Output
+	DDRC |= 0b00011110;		// Configure PC 1 - 4 as Output
 	
 	// Buttons
 	DDRB &= ~(1<<1);	//Configure PB1 as Input
@@ -25,8 +29,9 @@ void init(void){
 	PORTD |= 1<<1;		//Enable Internal Pull-Up at PD1
 }
 
-void displayBinaryCount(){
+/*oid displayBinaryCount(){
 
+	
 	int i = 1;
 	int n = counter;
 	while (n > 0) {
@@ -40,7 +45,7 @@ void displayBinaryCount(){
 		i++;
 	}
 
-}
+}*/
 
 
 int main(void){
@@ -50,9 +55,15 @@ int main(void){
  		if(BUTTON_ONE_PRESS){
 			counter ++;
 			counter %= 16;
-			displayBinaryCount(counter);
-			} else if (BUTTON_TWO_PRESS){
+			//displayBinaryCount(counter);
+			PORTC = (counter << 1);
+			while(BUTTON_ONE_PRESS){
+				
+			}
+			} 
+		if (BUTTON_TWO_PRESS){
 			counter = 0;
+			PORTC = (counter << 1);
 		}
 		
 
