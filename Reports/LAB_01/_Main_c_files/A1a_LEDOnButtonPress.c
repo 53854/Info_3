@@ -7,23 +7,20 @@
 
 void init(void){
 	// LED
-	DDRB |= (1<<5);// Configure PB5 as Output
+	DDRB |= (1<<5);	// Configure PB5 as Output
 	LED_ON;
+	
 	// Button
 	DDRB &= ~(1<<7);//Configure PB1 as Input
-	PORTB |= 1<<7;//Enable Internal Pull-Up at PB1
-}
-
-void check_button(void){
-	if(BUTTON_PRESS)
-	LED_ON;
-	else
-	LED_OFF;
+	PORTB |= 1<<7;	//Enable Internal Pull-Up at PB1
 }
 
 int main(void){
 	init();
 	while (1){
-		check_button();
+		if(BUTTON_PRESS)
+			LED_ON;
+		else
+			LED_OFF;
 	}
 }

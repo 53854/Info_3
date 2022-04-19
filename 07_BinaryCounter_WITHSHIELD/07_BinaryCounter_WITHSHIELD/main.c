@@ -31,7 +31,7 @@ int main(void){
 			counter ++;
 			counter %= 16;
 			PORTC = (counter << 1);
-			while(BUTTON_ONE_PRESS){}
+			while(BUTTON_ONE_PRESS){_delay_ms(100);}
 		} 
 		if (BUTTON_TWO_PRESS){
 			counter = 0;
