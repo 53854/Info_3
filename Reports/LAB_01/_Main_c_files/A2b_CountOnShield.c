@@ -1,10 +1,11 @@
+#define F_CPU 16E6			// or F_CPU 16000000
+
 #include <avr/io.h>
 #include <util/delay.h>
-#define F_CPU 16E6			// or F_CPU 16000000
+
 
 #define LED_ON PORTC |= (1<<1)
 #define LED_OFF PORTC &= ~(1<<1)
-
 #define LED1GN_TOGGLE PINC |= (1<<1)
 #define LED2GN_TOGGLE PINC |= (1<<2)
 #define LED3GN_TOGGLE PINC |= (1<<3)
@@ -28,20 +29,13 @@ void init(void){
 }
 
 void blink(){
-	for(unsigned i = 0; i <= blinkTimes; i++){
-		//blink the led
-        LED_ON;
-        _delay_ms(5000);
-        LED_OFF;
-        _delay_ms(5000);
+	for(unsigned i = 0; i < blinkTimes; i++){
+		LED_ON;
+		_delay_ms(500);
+		LED_OFF;
+		_delay_ms(500);
 	}
 }
-
-// void display_number_bin
-	// blinktimes to bin
-	// toggle LEDs
-	// Delay
-	// toggle LED
 
 int main(void){
 	init();
@@ -52,13 +46,5 @@ int main(void){
 		} else if (BUTTON_TWO_PRESS){
 			blinkTimes = 0;	
 		}
-		
-		// if BUTTON_ONE_PRESS
-			// display_number_bin 16BitBinary
-		
-		// if (blinkTimes >= 16 || BUTTON_TWO_PRESS) 
-				// blinkTimes = 0
-				
-		
 	}
 }

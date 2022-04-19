@@ -12,7 +12,6 @@ void init(void){
 	// Button
 	DDRB &= ~(1<<7);//Configure PB1 as Input
 	PORTB |= 1<<7;//Enable Internal Pull-Up at PB1
-	asm("nop");
 }
 
 void check_button(void){
