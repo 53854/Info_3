@@ -25,7 +25,7 @@ void init(void){
 	// Interrupt
 	sei();
 	TIMSK0 |= (1 << OCIE0A);    // Timer0 A Match enable
-	OCR0A = 1550;                // reset compare 10ms
+	OCR0A = 155;                // reset compare 10ms
 
 	TCCR0A |= (1 << WGM01);     // Configure CTC Mode
 	TCCR0A &= ~(1 << WGM00);
@@ -39,7 +39,9 @@ void init(void){
 static volatile uint8_t buttonStatus = 0; // 0 = PIND1 == 1
 
 ISR(TIMER0_COMPA_vect){
-	if(buttonStatus == 1 && PIND1 == 1) {
+	//int i = buttonStatus ^ ~PIND1;
+	
+	if(buttonStatus == 1 && !BUTTON_ONE_PRESS) {
 		buttonStatus = 0;
 		counter += 100;
 		switchLED();
