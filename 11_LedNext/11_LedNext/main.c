@@ -39,8 +39,6 @@ void init(void){
 static volatile uint8_t buttonStatus = 0; // 0 = PIND1 == 1
 
 ISR(TIMER0_COMPA_vect){
-	//int i = buttonStatus ^ ~PIND1;
-	
 	if(buttonStatus == 1 && !BUTTON_ONE_PRESS) {
 		buttonStatus = 0;
 		counter += 100;

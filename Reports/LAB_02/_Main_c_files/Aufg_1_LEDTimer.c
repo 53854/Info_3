@@ -1,6 +1,7 @@
+#define F_CPU 16E6
+
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#define F_CPU16E6
 
 #define LED_ON PORTC |= (1 << 1)
 #define LED_OFF PORTC &= ~(1 << 1)
@@ -17,10 +18,10 @@ void init(void)
 
     // Interrupt
     sei();
-    TIMSK0 |= (1 << OCIE0A); // Timer0 A Match enable
-    OCR0A = 155;             // reset compare 10ms
+    TIMSK0 |= (1 << OCIE0A);    // Timer0 A Match enable
+    OCR0A = 155;                // reset compare 10ms
 
-    TCCR0A |= (1 << WGM01); // Configure CTC Mode
+    TCCR0A |= (1 << WGM01);     // Configure CTC Mode
     TCCR0A &= ~(1 << WGM00);
     TCCR0B &= ~(1 << WGM02);
 
@@ -28,10 +29,9 @@ void init(void)
     TCCR0B &= ~(1 << CS01);
 }
 
+// timer 1 statt 0 da timer 1 16bit statt 8bit
 ISR(TIMER0_COMPA_vect)
 {
-
-    static volatile uint16_t oneSecondEqual = 60;
     static volatile uint16_t counter = 0;
     counter++;
     switch (counter)
