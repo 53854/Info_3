@@ -4,9 +4,10 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
-#define BUTTON_ONE_PRESS ((PIND & (1<<1)))
+#define BUTTON_ONE_PRESS (!(PIND & (1<<1)))
 
 static volatile uint16_t counter = 0;
+
 
 void init(void){
 	// LED
@@ -19,9 +20,33 @@ void init(void){
 	// Button
 	DDRD &= ~(1<<1);	//Configure PD1 as Input
 	PORTD |= 1<<1;		//Enable Internal Pull-Up at PD1
+	
+	
+	// Interrupt
+	sei();
+	TIMSK0 |= (1 << OCIE0A);    // Timer0 A Match enable
+	OCR0A = 1550;                // reset compare 10ms
+
+	TCCR0A |= (1 << WGM01);     // Configure CTC Mode
+	TCCR0A &= ~(1 << WGM00);
+	TCCR0B &= ~(1 << WGM02);
+
+	TCCR0B |= (1 << CS02) | (1 << CS00); // Prescaler 1024
+	TCCR0B &= ~(1 << CS01);
 }
 
-void onButtonPress(){
+
+static volatile uint8_t buttonStatus = 0; // 0 = PIND1 == 1
+
+ISR(TIMER0_COMPA_vect){
+	if(buttonStatus == 1 && PIND1 == 1) {
+		buttonStatus = 0;
+		counter += 100;
+		switchLED();
+	}
+}
+
+void switchLED(){
 	//static volatile uint16_t oneSecondEqual = 60;
 	switch (counter){
 		case 100:
@@ -66,20 +91,14 @@ void onButtonPress(){
 		counter = 0;
 		break;
 	}
-	
-	
 }
 
 int main(void){
 	init();
 	
 	while (1){
-		if(BUTTON_ONE_PRESS){
-			counter += 100;
-			onButtonPress();
-			while(BUTTON_ONE_PRESS){
-				_delay_ms(100);
-			}
+		if(BUTTON_ONE_PRESS && buttonStatus == 0){
+			buttonStatus = 1;
 		}
 	}
 }
