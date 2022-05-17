@@ -90,10 +90,23 @@ void Display_init(void) {
 }
 
 
+// Display: 132p x 176p = 23232p
+// Example: Set entire screen to a certain colour
+void fillColour(uint16_t colourhex){
+		for(uint16_t i = 0; i <= 23232; i++){
+			SPISend8Bit((colourhex >> 8) & 0xFF);	// High bit
+			SPISend8Bit((colourhex) & 0xFF);		// Low bit
+		}
+}
 
 int main(void){
 	DDRD |= (1<<D_C)|(1<<Reset);		//output: PD2 -> Data/Command; PD3 -> Reset
 	SPI_init();
 	Display_init();
-	while(1){;}
+	
+	fillColour(0xFFE0);
+	
+	while(1){
+		;
+	}
 }
