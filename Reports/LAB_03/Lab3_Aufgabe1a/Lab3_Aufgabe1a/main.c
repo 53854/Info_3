@@ -50,8 +50,8 @@
 #define D_C		PIND2		//display: Data/Command
 #define Reset	PIND3		//display: Reset
 
-#define BUTTON_ONE_PRESS ((PIND & (1<<1))) // -> PCINT17
-#define BUTTON_TWO_PRESS ((PINB & (1<<1))) // -> PCINT1
+#define BUTTON_ONE_PRESS (!(PIND & (1<<1))) // -> PCINT17
+#define BUTTON_TWO_PRESS (!(PINB & (1<<1))) // -> PCINT1
 
 // 10 * 10 Fenster x1=62,x2=71,y1=84,y2=93
 uint16_t fenster[] = {0xEF08,0x1800, 0x123E, 0x1547,0x1354,0x165D};
@@ -72,11 +72,7 @@ void init(){
 	
 	DDRD |= (1<<D_C)|(1<<Reset); //output: PD2 -> Data/Command; PD3 -> Reset
 	
-		// Buttons
-		DDRD &= ~(1<<1);	//Configure PD1 as Input
-		DDRB &= ~(1<<1);	//Configure PB1 as Input
-		PORTD |= 1<<1;		//DDRD &= ~(1<<1);	//Button 1 PD1
-		PORTB |= 1<<1;		//DDRB &= ~(1<<1);	//Button 2 PB1
+		
 }
 
 void SPI_init(){
@@ -121,7 +117,7 @@ void Display_init(void) {
 		0x7F01, 0xE181, 0xE202, 0xE276, 0xE183,
 		0x8001, 0xEF90, 0x0000,
 		/* pause */
-		0xEF08, /*hochforat*/ 0x1800, 0x1200, 0x1583, 0x1300,
+		0xEF08, /*hochformat*/ 0x1800, 0x1200, 0x1583, 0x1300,
         0x16AF
 	};
 	
@@ -141,6 +137,11 @@ void Display_init(void) {
 	SendCommandSeq(&InitData[12], 23);
 	_delay_ms(75);
 	SendCommandSeq(&InitData[35], 6);
+	// Buttons
+	DDRD &= ~(1<<1);	//Configure PD1 as Input
+	DDRB &= ~(1<<1);	//Configure PB1 as Input
+	PORTD |= 1<<1;		//DDRD &= ~(1<<1);	//Button 1 PD1
+	PORTB |= 1<<1;		//DDRB &= ~(1<<1);	//Button 2 PB1
 }
 
 void send16BitColour(uint16_t colourhex){
@@ -181,18 +182,28 @@ int main(void){
 }
 
 ISR(TIMER0_COMPA_vect){
-	if(buttonOneStatus == 1 && !BUTTON_ONE_PRESS) {
-		fillWindow(fenster,Yellow);
-		fenster[2] += 1;
-		fenster[3] += 1;
-		fillWindow(fenster,Red);
-		buttonOneStatus = 0;
-	}
-	if(buttonTwoStatus == 1 && !BUTTON_TWO_PRESS) {
-		fillWindow(fenster,Yellow);
-		fenster[2] -= 1;
-		fenster[3] -= 1;
-		fillWindow(fenster,Red);
-		buttonTwoStatus = 0;
-	}
+	
+		if(buttonOneStatus == 1 && BUTTON_ONE_PRESS) {
+			if(fenster[2] < 4730){ 
+				fillWindow(fenster,Yellow);
+				fenster[2] += 1;
+				fenster[3] += 1;
+				fillWindow(fenster,Red);
+				buttonOneStatus = 0;
+			}
+			
+		}
+		if(buttonTwoStatus == 1 && BUTTON_TWO_PRESS) {
+			if(fenster[2] > 4608){
+				fillWindow(fenster,Yellow);
+				fenster[2] -= 1;
+				fenster[3] -= 1;
+				fillWindow(fenster,Red);
+				buttonTwoStatus = 0;
+			}
+			
+		}
+		//if(){}
+			
+	
 }
