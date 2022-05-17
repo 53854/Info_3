@@ -12,8 +12,8 @@
 ;*  																		  *
 ;*	Versuch-Nr.: 5															  *
 ;******************************************************************************
-;*	Namen/Matrikel-Nr.:  1.		                                              *
-;*              		 2.									     			  *
+;*	Namen/Matrikel-Nr.:  1. 2604332                                           *
+;*              		 2. 2603380					     					  *
 ;******************************************************************************
 ;* 	Abgabedatum:             												  *
 ;******************************************************************************/
@@ -22,7 +22,6 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
-
 
 #define Black           0x0000      /*   0,   0,   0 */
 #define Navy            0x000F      /*   0,   0, 128 */
@@ -44,13 +43,41 @@
 #define GreenYellow     0xAFE5      /* 173, 255,  47 */
 #define Pink            0xF81F
 
-
 #define SPI_DDR DDRB
 #define CS      PINB2
 #define MOSI    PINB3
 #define SCK     PINB5
 #define D_C		PIND2		//display: Data/Command
 #define Reset	PIND3		//display: Reset
+
+#define BUTTON_ONE_PRESS ((PIND & (1<<1))) // -> PCINT17
+#define BUTTON_TWO_PRESS ((PINB & (1<<1))) // -> PCINT1
+
+// 10 * 10 Fenster x1=62,x2=71,y1=84,y2=93
+uint16_t fenster[] = {0xEF08,0x1800, 0x123E, 0x1547,0x1354,0x165D};
+uint8_t buttonOneStatus = 0; // 0 = PIND1 == 1
+uint8_t buttonTwoStatus = 0; // 0 = PINB1 == 1
+
+void init(){		
+	sei();						// Interrupt
+	TIMSK0 |= (1 << OCIE0A);    // Timer0 A Match enable
+	OCR0A = 155;                // reset compare 10ms
+
+	TCCR0A |= (1 << WGM01);     // Configure CTC Mode
+	TCCR0A &= ~(1 << WGM00);
+	TCCR0B &= ~(1 << WGM02);
+
+	TCCR0B |= (1 << CS02) | (1 << CS00); // Prescaler 1024
+	TCCR0B &= ~(1 << CS01);
+	
+	DDRD |= (1<<D_C)|(1<<Reset); //output: PD2 -> Data/Command; PD3 -> Reset
+	
+		// Buttons
+		DDRD &= ~(1<<1);	//Configure PD1 as Input
+		DDRB &= ~(1<<1);	//Configure PB1 as Input
+		PORTD |= 1<<1;		//DDRD &= ~(1<<1);	//Button 1 PD1
+		PORTB |= 1<<1;		//DDRB &= ~(1<<1);	//Button 2 PB1
+}
 
 void SPI_init(){
 	//set CS, MOSI and SCK to output:
@@ -127,22 +154,45 @@ void fillScreen(uint16_t colourhex){
 	}
 }
 
-uint16_t fenster[] = {0xEF08,0x1800,0x123E,0x1547,0x1354,0x165D};
-
+void fillWindow(uint16_t window, uint16_t colourhex){
+	SendCommandSeq(window, 6);
+	for(int i = 0; i <100; i++){
+		send16BitColour(colourhex);		
+	}
+}
 
 int main(void){
-	DDRD |= (1<<D_C)|(1<<Reset);		//output: PD2 -> Data/Command; PD3 -> Reset
+	init();
 	SPI_init();
 	Display_init();
 	
 	fillScreen(Yellow);
 	
-	SendCommandSeq(&fenster, 6);
-	for(int i = 0; i <100; i++){
-		send16BitColour(Red);		
-	}
+	fillWindow(fenster, Red);
 	
 	while(1){
-		;
+		if(BUTTON_ONE_PRESS && buttonOneStatus == 0){
+			buttonOneStatus = 1;
+		}
+		if(BUTTON_TWO_PRESS && buttonTwoStatus == 0){
+			buttonTwoStatus = 1;
+		}
+	}
+}
+
+ISR(TIMER0_COMPA_vect){
+	if(buttonOneStatus == 1 && !BUTTON_ONE_PRESS) {
+		fillWindow(fenster,Yellow);
+		fenster[2] += 1;
+		fenster[3] += 1;
+		fillWindow(fenster,Red);
+		buttonOneStatus = 0;
+	}
+	if(buttonTwoStatus == 1 && !BUTTON_TWO_PRESS) {
+		fillWindow(fenster,Yellow);
+		fenster[2] -= 1;
+		fenster[3] -= 1;
+		fillWindow(fenster,Red);
+		buttonTwoStatus = 0;
 	}
 }
