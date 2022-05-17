@@ -23,6 +23,28 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 
+
+#define Black           0x0000      /*   0,   0,   0 */
+#define Navy            0x000F      /*   0,   0, 128 */
+#define DarkGreen       0x03E0      /*   0, 128,   0 */
+#define DarkCyan        0x03EF      /*   0, 128, 128 */
+#define Maroon          0x7800      /* 128,   0,   0 */
+#define Purple          0x780F      /* 128,   0, 128 */
+#define Olive           0x7BE0      /* 128, 128,   0 */
+#define LightGrey       0xC618      /* 192, 192, 192 */
+#define DarkGrey        0x7BEF      /* 128, 128, 128 */
+#define Blue            0x001F      /*   0,   0, 255 */
+#define Green           0x07E0      /*   0, 255,   0 */
+#define Cyan            0x07FF      /*   0, 255, 255 */
+#define Red             0xF800      /* 255,   0,   0 */
+#define Magenta         0xF81F      /* 255,   0, 255 */
+#define Yellow          0xFFE0      /* 255, 255,   0 */
+#define White           0xFFFF      /* 255, 255, 255 */
+#define Orange          0xFD20      /* 255, 165,   0 */
+#define GreenYellow     0xAFE5      /* 173, 255,  47 */
+#define Pink            0xF81F
+
+
 #define SPI_DDR DDRB
 #define CS      PINB2
 #define MOSI    PINB3
@@ -70,7 +92,10 @@ void Display_init(void) {
 		0x0500, 0x0600, 0x0700, 0xEF00, 0xEE0C,
 		0xEF90, 0x0080, 0xEFB0, 0x4902, 0xEF00,
 		0x7F01, 0xE181, 0xE202, 0xE276, 0xE183,
-		0x8001, 0xEF90, 0x0000
+		0x8001, 0xEF90, 0x0000,
+		/* pause */
+		0xEF08, /*hochforat*/ 0x1800, 0x1200, 0x1583, 0x1300,
+        0x16AF
 	};
 	
 	_delay_ms(300);
@@ -87,24 +112,35 @@ void Display_init(void) {
 	SendCommandSeq(&InitData[2], 10);
 	_delay_ms(75);
 	SendCommandSeq(&InitData[12], 23);
+	_delay_ms(75);
+	SendCommandSeq(&InitData[35], 6);
 }
 
-
-// Display: 132p x 176p = 23232p
-// Example: Set entire screen to a certain colour
-void fillColour(uint16_t colourhex){
-		for(uint16_t i = 0; i <= 23232; i++){
-			SPISend8Bit((colourhex >> 8) & 0xFF);	// High bit
-			SPISend8Bit((colourhex) & 0xFF);		// Low bit
-		}
+void send16BitColour(uint16_t colourhex){
+	SPISend8Bit((colourhex >> 8) & 0xFF);	// High bit
+	SPISend8Bit((colourhex) & 0xFF);		// Low bit
 }
+
+void fillScreen(uint16_t colourhex){
+	for(uint16_t i = 0; i <= 132*176; i++){
+		send16BitColour(colourhex);
+	}
+}
+
+uint16_t fenster[] = {0xEF08,0x1800,0x123E,0x1547,0x1354,0x165D};
+
 
 int main(void){
 	DDRD |= (1<<D_C)|(1<<Reset);		//output: PD2 -> Data/Command; PD3 -> Reset
 	SPI_init();
 	Display_init();
 	
-	fillColour(0xFFE0);
+	fillScreen(Yellow);
+	
+	SendCommandSeq(&fenster, 6);
+	for(int i = 0; i <100; i++){
+		send16BitColour(Red);		
+	}
 	
 	while(1){
 		;
